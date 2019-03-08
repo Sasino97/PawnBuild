@@ -117,7 +117,17 @@ namespace PawnMake
                     if(parameter == "-r")
                     {
                         if(!string.IsNullOrWhiteSpace(makeFile.Run))
-                            Process.Start(makeFile.Run);
+                        {
+                            var runProcess = new Process()
+                            {
+                                StartInfo = new ProcessStartInfo()
+                                {
+                                    FileName = new FileInfo(makeFile.Run).FullName,
+                                    WorkingDirectory = new FileInfo(makeFile.Run).Directory.FullName
+                                }
+                            };
+                            runProcess.Start();
+                        }
                     }
                 }
             }
