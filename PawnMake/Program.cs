@@ -116,17 +116,23 @@ namespace PawnMake
                     string parameter = args[1];
                     if(parameter == "-r")
                     {
-                        if(!string.IsNullOrWhiteSpace(makeFile.Run))
+                        if(makeFile.Run.Length > 0)
                         {
-                            var runProcess = new Process()
+                            foreach(string run in makeFile.Run)
                             {
-                                StartInfo = new ProcessStartInfo()
+                                if (!string.IsNullOrWhiteSpace(run))
                                 {
-                                    FileName = new FileInfo(makeFile.Run).FullName,
-                                    WorkingDirectory = new FileInfo(makeFile.Run).Directory.FullName
+                                    var runProcess = new Process()
+                                    {
+                                        StartInfo = new ProcessStartInfo()
+                                        {
+                                            FileName = new FileInfo(run).FullName,
+                                            WorkingDirectory = new FileInfo(run).Directory.FullName
+                                        }
+                                    };
+                                    runProcess.Start();
                                 }
-                            };
-                            runProcess.Start();
+                            }
                         }
                     }
                 }
