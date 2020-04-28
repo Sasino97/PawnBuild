@@ -61,6 +61,12 @@ namespace PawnMake
                 Console.WriteLine("\n----- Starting build... -----");
                 #endif
 
+                int succeeded = 0;
+                int failed = 0;
+                int skipped = 0;
+
+                Console.WriteLine($"------ Build started - Project: {makeFile.ProjectName} ------");
+
                 foreach (string file in makeFile.Files)
                 {
                     foreach (BuildFolder build in makeFile.BuildFolders)
@@ -69,15 +75,27 @@ namespace PawnMake
                         if (File.Exists(srcPath))
                         {
                             string outPath = Path.Combine(build.OutputFolder, Path.GetFileNameWithoutExtension(file) + ".amx");
+
+                            // check last compile time
+                            DateTime srcTime = File.GetLastWriteTime(srcPath);
+                            DateTime outTime = File.GetLastWriteTime(outPath);
+
+                            if (srcTime < outTime)
+                            {
+                                Console.WriteLine($"* Skipping {srcPath}");
+                                skipped++;
+                                continue;
+                            }
+
                             string compilerArgs = $"\"{srcPath}\" -o\"{outPath}\" ";
 
                             foreach (string incPath in makeFile.IncludeFolders)
                                 compilerArgs += $"-i\"{incPath}\" ";
 
-                            if(!string.IsNullOrWhiteSpace(makeFile.Args))
+                            if (!string.IsNullOrWhiteSpace(makeFile.Args))
                                 compilerArgs += $"{makeFile.Args} ";
 
-                            Console.WriteLine($"\nCompiling {srcPath} ...");
+                            Console.WriteLine($"* Compiling {srcPath} -> {outPath}");
 
                             var pawnccOutput = new StringBuilder();
                             var startInfo = new ProcessStartInfo()
@@ -105,13 +123,31 @@ namespace PawnMake
 
                                 process.WaitForExit(5000);
 
-                                Console.WriteLine(pawnccOutput.ToString());
+                                string finalOutput = pawnccOutput
+                                    .ToString()
+                                    .Insert(0, "    ")
+                                    .Replace("\n", "\n    ")
+                                    .TrimEnd()
+                                ;
+
+                                if (finalOutput.Contains(" Error.") || finalOutput.Contains(" Errors."))
+                                    failed++;
+                                else
+                                    succeeded++;
+
+                                if (finalOutput.Contains(" Error.") || finalOutput.Contains(" Errors.")
+                                     || finalOutput.Contains(" Warning.") || finalOutput.Contains(" Warnings."))
+                                {
+                                    Console.WriteLine(finalOutput + "\n");
+                                }
                             }
                         }
                     }
                 }
 
-                if(args.Length > 1)
+                Console.WriteLine($"========== Build: {succeeded} succeeded, {failed} failed, {skipped} skipped ==========");
+
+                if (args.Length > 1)
                 {
                     string parameter = args[1];
                     if(parameter == "-r")

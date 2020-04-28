@@ -2,6 +2,7 @@
 {
     public class MakeFile
     {
+        public string ProjectName { get; set; } = "project";
         public BuildFolder[] BuildFolders { get; set; }
         public string[] IncludeFolders { get; set; }
         public string[] Files { get; set; }
