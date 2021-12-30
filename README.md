@@ -1,17 +1,22 @@
-# PawnMake
+# PawnBuild
 
 ## Intro
 A very simple yet powerful command line tool which can be used to build Pawn scripts in the form of a project, using a json-based configuration file. 
 
 It needs the pawn compiler (in PATH or in the same directory).
-Currently only working on Windows, being built on .NET Framework 4.7.1, but can be very easily ported to .NET Core, most likely with no changes to the code at all, and it would run on Linux and MacOSX.
+Working on Windows, Linux and MacOSX.
 
 ## Usage
 ```
-PawnMake <filename.json> [options]
+PawnBuild <buildFileName.json> [options]
 ```
 
-Currently the only option available is -r, which means that after building, the programs defined in the `Run` array should be called.
+## Options
+```
+-r (--run): executes the run instruction after building
+-v (--verbose): prints more information
+-f (--force): does not skip any file
+```
 
 ## Example build.json file
 ```
@@ -42,8 +47,6 @@ Currently the only option available is -r, which means that after building, the 
         "RP_Admin.pwn",
         "RP_Clothes.pwn",
         "RP_Dealers.pwn",
-        "RP_Friendship.pwn",
-        "RP_Drugs.pwn",
         "RP_Houses.pwn",
         "RP_Phone.pwn",
         "RP_NPC_Intro1.pwn"
@@ -113,7 +116,7 @@ The following is an example tasks.json:
         {
             "label": "Build",
             "type": "shell",
-            "command": "PawnMake.exe",
+            "command": "PawnBuild.exe",
             "args": [ "${workspaceRoot}\\build.json" ],
             "group": {
                 "kind": "build",
@@ -123,7 +126,7 @@ The following is an example tasks.json:
         {
             "label": "Build and Run",
             "type": "shell",
-            "command": "PawnMake.exe",
+            "command": "PawnBuild.exe",
             "args": [ "${workspaceRoot}\\build.json", "-r" ],
             "group": {
                 "kind": "test",
