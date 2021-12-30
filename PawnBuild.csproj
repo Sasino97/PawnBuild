@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <Authors>Sal Strazzullo</Authors>
+    <Company>Sasinosoft Games</Company>
+    <Description>A Build Tool for the Pawn Compiler</Description>
+    <Copyright>Copyright (c) 2021 - Sasinosoft Games</Copyright>
+    <PackageProjectUrl>https://github.com/SaSiNO97/PawnBuild</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SaSiNO97/PawnBuild</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <FileVersion>1.3.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
